@@ -364,7 +364,10 @@ function generateQR() {
   const rawPayloadText = document.getElementById('raw-payload-text');
   const payloadTypeLabel = document.getElementById('payload-type-label');
 
-  if (currentTab === 'pix' && key) {
+  const hasPixKey = document.getElementById('in-pix-key').value.trim() !== '';
+  const hasLink = document.getElementById('in-link').value.trim() !== '';
+
+  if (currentTab === 'pix' && hasPixKey) {
     rawPayloadContainer.classList.remove('hidden');
     rawPayloadText.innerText = content;
     payloadTypeLabel.innerText = 'PIX Copia e Cola';
@@ -372,7 +375,7 @@ function generateQR() {
     rawPayloadContainer.classList.remove('hidden');
     rawPayloadText.innerText = content;
     payloadTypeLabel.innerText = 'Código vCard';
-  } else if (currentTab === 'link' && link) {
+  } else if (currentTab === 'link' && hasLink) {
     rawPayloadContainer.classList.remove('hidden');
     rawPayloadText.innerText = content;
     payloadTypeLabel.innerText = 'URL Raw';

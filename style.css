@@ -474,6 +474,21 @@ body {
   z-index: 10;
 }
 
+/* Only the active content panel is shown; the rest stay hidden */
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+  animation: tab-fade-in 0.25s ease;
+}
+
+@keyframes tab-fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* Inputs and Forms */
 .input-group {
   display: flex;
