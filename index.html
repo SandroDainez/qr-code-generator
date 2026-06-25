@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QRCraft | Gerador de QR Code Premium & Personalizado</title>
-  <!-- Google Fonts: Outfit & Plus Jakarta Sans -->
+  <title>QRCraft | Gerador de QR Code Premium</title>
+  <!-- Google Fonts: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
@@ -18,6 +18,11 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Ambient Dark Glow Effects -->
+  <div class="ambient-glow-1"></div>
+  <div class="ambient-glow-2"></div>
+  <div class="bg-pattern"></div>
+
   <div class="app-container">
     <!-- Header -->
     <header class="app-header">
@@ -27,10 +32,19 @@
         </div>
         <div>
           <h1>QRCraft</h1>
-          <p>Crie códigos QR premium com design exclusivo</p>
+          <p>Gerador de QR Code Premium</p>
         </div>
       </div>
       <div class="header-actions">
+        <!-- Status Indicator -->
+        <div class="header-status">
+          <div class="status-dot-wrapper">
+            <div class="status-dot"></div>
+            <div class="status-dot-pulse"></div>
+          </div>
+          <span>Offline-Ready</span>
+        </div>
+        <!-- Theme Toggle -->
         <button id="theme-toggle" class="btn-icon" title="Alternar Tema">
           <i data-lucide="sun" class="sun-icon"></i>
           <i data-lucide="moon" class="moon-icon"></i>
@@ -44,7 +58,7 @@
       <section class="controls-column">
         <!-- Section: Content Type Selector -->
         <div class="card card-tabs">
-          <h2>1. Conteúdo</h2>
+          <h2><i data-lucide="pencil-line"></i> 1. Conteúdo</h2>
           <div class="tabs-grid">
             <button class="tab-btn active" data-tab="link">
               <i data-lucide="link"></i>
@@ -264,7 +278,7 @@
 
         <!-- Section: Design Presets -->
         <div class="card card-presets">
-          <h2>2. Presets Rápidos</h2>
+          <h2><i data-lucide="sparkles"></i> 2. Presets Rápidos</h2>
           <div class="presets-grid">
             <button class="preset-btn active" data-preset="classic">
               <span class="preset-preview p-classic"></span>
@@ -288,7 +302,7 @@
             </button>
             <button class="preset-btn" data-preset="custom">
               <span class="preset-preview p-custom"><i data-lucide="sliders"></i></span>
-              <span class="preset-label">Personalizado</span>
+              <span class="preset-label">Customizado</span>
             </button>
           </div>
         </div>
@@ -296,14 +310,14 @@
         <!-- Section: Visual Customization -->
         <div class="card card-customization">
           <div class="custom-accordion-header">
-            <h2>3. Customização Avançada</h2>
+            <h2><i data-lucide="palette"></i> 3. Customização Avançada</h2>
             <i data-lucide="chevron-down" class="accordion-icon"></i>
           </div>
 
           <div class="custom-accordion-body">
             <!-- Colors Group -->
             <fieldset class="custom-group">
-              <legend><i data-lucide="palette"></i> Cores do QR Code</legend>
+              <legend><i data-lucide="paint-brush"></i> Cores do QR Code</legend>
               
               <div class="input-group">
                 <label>Modo de Cor do QR</label>
@@ -324,8 +338,8 @@
                 <div class="color-picker-group">
                   <label for="color-solid">Cor Principal</label>
                   <div class="color-picker-wrapper">
-                    <input type="color" id="color-solid" value="#111111">
-                    <input type="text" id="color-solid-hex" class="hex-text" value="#111111" maxlength="7">
+                    <input type="color" id="color-solid" value="#ffffff">
+                    <input type="text" id="color-solid-hex" class="hex-text" value="#FFFFFF" maxlength="7">
                   </div>
                 </div>
               </div>
@@ -336,14 +350,14 @@
                   <label for="color-grad-1">Cor Inicial</label>
                   <div class="color-picker-wrapper">
                     <input type="color" id="color-grad-1" value="#3b82f6">
-                    <input type="text" id="color-grad-1-hex" class="hex-text" value="#3b82f6" maxlength="7">
+                    <input type="text" id="color-grad-1-hex" class="hex-text" value="#3B82F6" maxlength="7">
                   </div>
                 </div>
                 <div class="color-picker-group">
                   <label for="color-grad-2">Cor Final</label>
                   <div class="color-picker-wrapper">
                     <input type="color" id="color-grad-2" value="#8b5cf6">
-                    <input type="text" id="color-grad-2-hex" class="hex-text" value="#8b5cf6" maxlength="7">
+                    <input type="text" id="color-grad-2-hex" class="hex-text" value="#8B5CF6" maxlength="7">
                   </div>
                 </div>
                 <div class="input-group">
@@ -367,8 +381,8 @@
                 <div class="color-picker-group">
                   <label for="color-bg">Cor de Fundo</label>
                   <div class="color-picker-wrapper">
-                    <input type="color" id="color-bg" value="#ffffff">
-                    <input type="text" id="color-bg-hex" class="hex-text" value="#ffffff" maxlength="7">
+                    <input type="color" id="color-bg" value="#030303">
+                    <input type="text" id="color-bg-hex" class="hex-text" value="#030303" maxlength="7">
                   </div>
                 </div>
                 <div class="checkbox-group">
@@ -397,15 +411,15 @@
                   <div class="color-picker-group">
                     <label for="color-eye-outer">Borda dos Olhos</label>
                     <div class="color-picker-wrapper">
-                      <input type="color" id="color-eye-outer" value="#111111">
-                      <input type="text" id="color-eye-outer-hex" class="hex-text" value="#111111" maxlength="7">
+                      <input type="color" id="color-eye-outer" value="#ffffff">
+                      <input type="text" id="color-eye-outer-hex" class="hex-text" value="#FFFFFF" maxlength="7">
                     </div>
                   </div>
                   <div class="color-picker-group">
                     <label for="color-eye-inner">Centro dos Olhos</label>
                     <div class="color-picker-wrapper">
-                      <input type="color" id="color-eye-inner" value="#111111">
-                      <input type="text" id="color-eye-inner-hex" class="hex-text" value="#111111" maxlength="7">
+                      <input type="color" id="color-eye-inner" value="#ffffff">
+                      <input type="text" id="color-eye-inner-hex" class="hex-text" value="#FFFFFF" maxlength="7">
                     </div>
                   </div>
                 </div>
@@ -433,7 +447,7 @@
 
             <!-- Dots Customization Group -->
             <fieldset class="custom-group">
-              <legend><i data-lucide="grid-3x3"></i> Estilo dos Módulos (Corpo)</legend>
+              <legend><i data-lucide="layout-grid"></i> Estilo dos Módulos (Corpo)</legend>
               <div class="input-group">
                 <label for="style-dots">Formato dos Módulos</label>
                 <select id="style-dots">
@@ -481,10 +495,10 @@
               <div class="logo-upload-wrapper">
                 <label for="logo-upload" class="btn-secondary logo-upload-label">
                   <i data-lucide="upload-cloud"></i>
-                  <span>Enviar Logo Personalizada</span>
+                  <span>Enviar Logo</span>
                 </label>
                 <input type="file" id="logo-upload" accept="image/*" class="hidden-input">
-                <span id="logo-file-name" class="upload-file-name">Nenhum arquivo selecionado</span>
+                <span id="logo-file-name" class="upload-file-name">Nenhuma imagem</span>
                 <button type="button" id="logo-remove-btn" class="btn-icon btn-remove hidden" title="Remover Logo">
                   <i data-lucide="trash-2"></i>
                 </button>
@@ -520,7 +534,7 @@
 
             <!-- Export settings -->
             <fieldset class="custom-group">
-              <legend><i data-lucide="settings"></i> Opções Técnicas</legend>
+              <legend><i data-lucide="sliders"></i> Opções Técnicas</legend>
               <div class="form-row">
                 <div class="input-group">
                   <label for="qr-size">Tamanho de Saída</label>
@@ -551,18 +565,16 @@
         <div class="sticky-preview-wrapper">
           <div class="card card-preview">
             <div class="preview-header">
-              <h2>QR Code</h2>
-              <span class="status-badge live-badge"><span class="pulse-dot"></span> Tempo Real</span>
+              <h2>QR Code Preview</h2>
+              <span class="status-badge live-badge"><span class="pulse-dot"></span> Ao Vivo</span>
             </div>
 
             <!-- Canvas Container -->
             <div class="qr-canvas-container">
-              <div id="qr-output">
-                <!-- QR Code styling library will inject the canvas here -->
-              </div>
+              <div id="qr-output"></div>
               <div id="qr-placeholder" class="qr-placeholder hidden">
                 <i data-lucide="qr-code"></i>
-                <p>Preencha os dados à esquerda para visualizar</p>
+                <p>Preencha os dados à esquerda</p>
               </div>
             </div>
 
@@ -584,17 +596,17 @@
             <div class="actions-grid">
               <button id="btn-download-png" class="btn-primary">
                 <i data-lucide="download"></i>
-                <span>Download PNG</span>
+                <span>PNG</span>
               </button>
               <button id="btn-download-svg" class="btn-secondary">
                 <i data-lucide="file-code"></i>
                 <span>SVG (Vetor)</span>
               </button>
-              <button id="btn-copy-img" class="btn-secondary" title="Copiar como imagem para colar direto em outros apps">
-                <i data-lucide="copy-check"></i>
-                <span>Copiar Imagem</span>
+              <button id="btn-copy-img" class="btn-secondary" title="Copiar Imagem">
+                <i data-lucide="copy"></i>
+                <span>Copiar</span>
               </button>
-              <button id="btn-share" class="btn-secondary" title="Compartilhar QR Code">
+              <button id="btn-share" class="btn-secondary" title="Compartilhar">
                 <i data-lucide="share-2"></i>
                 <span>Compartilhar</span>
               </button>
@@ -614,7 +626,7 @@
               <!-- Dynamically populated -->
               <div class="history-empty">
                 <i data-lucide="history"></i>
-                <p>Nenhum QR Code salvo ainda. Os códigos gerados aparecerão aqui.</p>
+                <p>Nenhum QR Code salvo.</p>
               </div>
             </div>
           </div>

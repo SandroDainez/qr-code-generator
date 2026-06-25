@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupCustomizationEvents();
   setupExportEvents();
   setupInputWatchers();
+  setupCardFlashlightGlow();
 
   // Generate initial QR
   generateQR();
@@ -50,6 +51,20 @@ function loadTheme() {
     const target = current === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', target);
     localStorage.setItem('qr-theme', target);
+  });
+}
+
+// Cards Flashlight Glow Effect (From reference Finex layout)
+function setupCardFlashlightGlow() {
+  const cards = document.querySelectorAll('.card');
+  cards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+    });
   });
 }
 
@@ -105,11 +120,11 @@ function initQR() {
     type: 'canvas',
     data: 'https://exemplo.com.br',
     dotsOptions: {
-      color: '#111111',
+      color: '#ffffff',
       type: 'square'
     },
     backgroundOptions: {
-      color: '#ffffff'
+      color: '#030303'
     },
     imageOptions: {
       crossOrigin: 'anonymous',
@@ -449,26 +464,15 @@ function setupCustomizationEvents() {
     reader.onload = (event) => {
       customLogoDataUrl = event.target.result;
       
-      // Auto check the "custom" logo radio preset hidden selector
-      const customLogoLabel = document.querySelector('[data-logo="custom"]');
-      if (customLogoLabel) {
-        // Create custom preset label if it doesn't exist, or just simulate checking it
-        // We actually want custom option checked
-        // Let's force check the custom radio (or we can use our state variables directly)
-        // Let's set logoPreset to custom in DOM
-        const radioCustom = document.createElement('input');
-        radioCustom.type = 'radio';
-        radioCustom.name = 'logo-preset';
-        radioCustom.value = 'custom';
-        radioCustom.checked = true;
-        
-        // Remove active class from presets and make uploading visual
-        logoPresetLabels.forEach(l => l.classList.remove('active'));
-        logoSettingsControls.classList.remove('hidden');
-      }
+      const radioCustom = document.createElement('input');
+      radioCustom.type = 'radio';
+      radioCustom.name = 'logo-preset';
+      radioCustom.value = 'custom';
+      radioCustom.checked = true;
       
-      // Force custom mode
-      // Select none of the other buttons
+      logoPresetLabels.forEach(l => l.classList.remove('active'));
+      logoSettingsControls.classList.remove('hidden');
+      
       logoPresetLabels.forEach(l => {
         const rad = l.querySelector('input');
         rad.checked = false;
@@ -484,7 +488,7 @@ function setupCustomizationEvents() {
     logoUploadInput.value = '';
     customLogoDataUrl = null;
     customLogoName = '';
-    logoFileName.innerText = 'Nenhum arquivo selecionado';
+    logoFileName.innerText = 'Nenhuma imagem';
     logoRemoveBtn.classList.add('hidden');
 
     // Revert to none preset
@@ -542,15 +546,13 @@ function bindColorPicker(pickerId, hexInputId) {
   });
 }
 
-// Apply quick styling presets
+// Apply quick styling presets - adapted for deep black theme
 function applyDesignPreset(presetName) {
   if (presetName === 'custom') {
-    // Open the customization accordion and let them tweak
     document.querySelector('.card-customization').classList.add('open');
     return;
   }
 
-  // Helper to trigger events
   const setRadio = (name, val) => {
     const rad = document.querySelector(`input[name="${name}"][value="${val}"]`);
     if (rad) {
@@ -582,7 +584,6 @@ function applyDesignPreset(presetName) {
     }
   };
 
-  // Reset Logo Settings
   setRadio('logo-preset', 'none');
   const logoRemoveBtn = document.getElementById('logo-remove-btn');
   if (logoRemoveBtn) logoRemoveBtn.click(); // Reset upload
@@ -590,8 +591,8 @@ function applyDesignPreset(presetName) {
   switch (presetName) {
     case 'classic':
       setRadio('color-mode', 'solid');
-      setColor('color-solid', 'color-solid-hex', '#111111');
-      setColor('color-bg', 'color-bg-hex', '#ffffff');
+      setColor('color-solid', 'color-solid-hex', '#ffffff');
+      setColor('color-bg', 'color-bg-hex', '#030303');
       setCheckbox('color-bg-trans', false);
       setCheckbox('custom-eyes-toggle', false);
       setSelect('style-dots', 'square');
@@ -601,12 +602,12 @@ function applyDesignPreset(presetName) {
 
     case 'rounded-ocean':
       setRadio('color-mode', 'gradient');
-      setColor('color-grad-1', 'color-grad-1-hex', '#2563eb');
-      setColor('color-grad-2', 'color-grad-2-hex', '#7c3aed');
+      setColor('color-grad-1', 'color-grad-1-hex', '#3b82f6');
+      setColor('color-grad-2', 'color-grad-2-hex', '#8b5cf6');
       setSelect('color-grad-type', 'linear');
       document.getElementById('color-grad-angle').value = 45;
       document.getElementById('val-grad-angle').innerText = '45°';
-      setColor('color-bg', 'color-bg-hex', '#ffffff');
+      setColor('color-bg', 'color-bg-hex', '#030303');
       setCheckbox('color-bg-trans', false);
       setCheckbox('custom-eyes-toggle', false);
       setSelect('style-dots', 'rounded');
@@ -621,7 +622,7 @@ function applyDesignPreset(presetName) {
       setSelect('color-grad-type', 'linear');
       document.getElementById('color-grad-angle').value = 45;
       document.getElementById('val-grad-angle').innerText = '45°';
-      setColor('color-bg', 'color-bg-hex', '#0f172a');
+      setColor('color-bg', 'color-bg-hex', '#030303');
       setCheckbox('color-bg-trans', false);
       setCheckbox('custom-eyes-toggle', false);
       setSelect('style-dots', 'extra-rounded');
@@ -632,14 +633,11 @@ function applyDesignPreset(presetName) {
     case 'gold-dark':
       setRadio('color-mode', 'solid');
       setColor('color-solid', 'color-solid-hex', '#eab308');
-      setColor('color-bg', 'color-bg-hex', '#0f172a');
+      setColor('color-bg', 'color-bg-hex', '#030303');
       setCheckbox('color-bg-trans', false);
-      
-      // Custom eyes look awesome in gold preset
       setCheckbox('custom-eyes-toggle', true);
       setColor('color-eye-outer', 'color-eye-outer-hex', '#facc15');
       setColor('color-eye-inner', 'color-eye-inner-hex', '#eab308');
-
       setSelect('style-dots', 'classy-rounded');
       setSelect('style-eye-outer', 'rounded');
       setSelect('style-eye-inner', 'square');
@@ -652,7 +650,7 @@ function applyDesignPreset(presetName) {
       setSelect('color-grad-type', 'linear');
       document.getElementById('color-grad-angle').value = 135;
       document.getElementById('val-grad-angle').innerText = '135°';
-      setColor('color-bg', 'color-bg-hex', '#ffffff');
+      setColor('color-bg', 'color-bg-hex', '#030303');
       setCheckbox('color-bg-trans', false);
       setCheckbox('custom-eyes-toggle', false);
       setSelect('style-dots', 'rounded');
@@ -661,7 +659,6 @@ function applyDesignPreset(presetName) {
       break;
   }
 
-  // Adjust active preset selection display
   const presetLabels = document.querySelectorAll('.logo-preset-btn');
   const activePresetRadio = document.querySelector('input[name="logo-preset"]:checked');
   if (activePresetRadio) {
@@ -749,7 +746,6 @@ function setupExportEvents() {
             saveToHistory();
           })
           .catch(err => {
-            // Ignore aborts
             if (err.name !== 'AbortError') console.error(err);
           });
         } else {
@@ -757,7 +753,6 @@ function setupExportEvents() {
         }
       });
     } else {
-      // Fallback: Copy URL or show alert
       alert('Compartilhamento não suportado neste navegador. Use os botões Copiar ou Download.');
     }
   });
@@ -777,7 +772,6 @@ function saveToHistory() {
   const { content, label } = getQRContentAndLabel();
   if (!content || content === 'https://exemplo.com.br' || content === 'PIX' || content === 'WIFI:S:;;') return;
 
-  // Evitar duplicados imediatos na lista
   if (history.length > 0 && history[0].value === content) return;
 
   const canvas = document.querySelector('#qr-output canvas');
@@ -794,8 +788,6 @@ function saveToHistory() {
   };
 
   history.unshift(historyItem);
-  
-  // Limita a 10 itens
   if (history.length > 10) {
     history.pop();
   }
@@ -823,7 +815,7 @@ function renderHistory() {
     container.innerHTML = `
       <div class="history-empty">
         <i data-lucide="history"></i>
-        <p>Nenhum QR Code salvo ainda. Os códigos gerados aparecerão aqui.</p>
+        <p>Nenhum QR Code salvo.</p>
       </div>
     `;
     lucide.createIcons();
@@ -867,18 +859,15 @@ function renderHistory() {
 
   lucide.createIcons();
 
-  // Bind actions inside history list
   container.querySelectorAll('.history-item').forEach(itemEl => {
     const id = parseInt(itemEl.getAttribute('data-id'));
     const itemData = history.find(h => h.id === id);
 
-    // Restore QR Code state
     itemEl.querySelector('.btn-restore').addEventListener('click', (e) => {
       e.stopPropagation();
       restoreQRState(itemData);
     });
 
-    // Delete single item
     itemEl.querySelector('.btn-delete-item').addEventListener('click', (e) => {
       e.stopPropagation();
       history = history.filter(h => h.id !== id);
@@ -918,18 +907,15 @@ function getVisualConfig() {
 function restoreQRState(item) {
   if (!item) return;
 
-  // Restore current tab
   const tabBtn = document.querySelector(`.tab-btn[data-tab="${item.type}"]`);
   if (tabBtn) tabBtn.click();
 
-  // Restore content inputs
   switch (item.type) {
     case 'link':
       document.getElementById('in-link').value = item.value;
       break;
 
     case 'whats':
-      // Extract number and message from URL
       try {
         const urlObj = new URL(item.value);
         const number = urlObj.pathname.replace('/', '');
@@ -943,7 +929,6 @@ function restoreQRState(item) {
       break;
 
     case 'wifi':
-      // Parse WIFI:T:WPA;S:Rede;P:senha;;
       const match = item.value.match(/WIFI:T:(.*?);S:(.*?);P:(.*?);;/);
       if (match) {
         document.getElementById('in-wifi-sec').value = match[1];
@@ -953,8 +938,6 @@ function restoreQRState(item) {
       break;
 
     case 'pix':
-      // Parse PIX fields (keys/name/city/amount/desc) from payload
-      // Simple parser or just reload value into key
       document.getElementById('in-pix-key').value = extractPixField(item.value, '26', '01');
       document.getElementById('in-pix-name').value = extractPixField(item.value, '59');
       document.getElementById('in-pix-city').value = extractPixField(item.value, '60');
@@ -963,7 +946,6 @@ function restoreQRState(item) {
       break;
 
     case 'email':
-      // Parse mailto:to?subject=sub&body=body
       try {
         const mailStr = item.value.replace('mailto:', '');
         const parts = mailStr.split('?');
@@ -979,7 +961,6 @@ function restoreQRState(item) {
       break;
 
     case 'vcard':
-      // Parse vCard fields line by line
       const lines = item.value.split('\n');
       let first = '', last = '', phone = '', email = '', org = '', url = '';
       lines.forEach(line => {
@@ -1010,18 +991,15 @@ function restoreQRState(item) {
       break;
   }
 
-  // Restore visuals if saved
   if (item.visuals) {
     const v = item.visuals;
     
-    // Color Mode
     const rad = document.querySelector(`input[name="color-mode"][value="${v.colorMode}"]`);
     if (rad) {
       rad.checked = true;
       rad.dispatchEvent(new Event('change'));
     }
 
-    // Color inputs
     document.getElementById('color-solid').value = v.solidColor;
     document.getElementById('color-solid-hex').value = v.solidColor.toUpperCase();
     document.getElementById('color-grad-1').value = v.grad1;
@@ -1032,12 +1010,10 @@ function restoreQRState(item) {
     document.getElementById('color-grad-angle').value = v.gradAngle;
     document.getElementById('val-grad-angle').innerText = `${v.gradAngle}°`;
 
-    // Background
     document.getElementById('color-bg').value = v.bgColor;
     document.getElementById('color-bg-hex').value = v.bgColor.toUpperCase();
     document.getElementById('color-bg-trans').checked = v.bgTrans;
 
-    // Eyes
     document.getElementById('custom-eyes-toggle').checked = v.customEyes;
     document.getElementById('custom-eyes-toggle').dispatchEvent(new Event('change'));
     document.getElementById('color-eye-outer').value = v.eyeOuterColor;
@@ -1045,12 +1021,10 @@ function restoreQRState(item) {
     document.getElementById('color-eye-inner').value = v.eyeInnerColor;
     document.getElementById('color-eye-inner-hex').value = v.eyeInnerColor.toUpperCase();
     
-    // Style selects
     document.getElementById('style-dots').value = v.styleDots;
     document.getElementById('style-eye-outer').value = v.styleEyeOuter;
     document.getElementById('style-eye-inner').value = v.styleEyeInner;
 
-    // Logo Restore
     customLogoDataUrl = v.customLogoDataUrl;
     customLogoName = v.customLogoName;
 
@@ -1063,7 +1037,6 @@ function restoreQRState(item) {
       logoRemoveBtn.classList.remove('hidden');
       logoSettingControls.classList.remove('hidden');
 
-      // Uncheck preset labels
       const presetLabels = document.querySelectorAll('.logo-preset-btn');
       presetLabels.forEach(l => {
         l.classList.remove('active');
@@ -1079,7 +1052,7 @@ function restoreQRState(item) {
         if (lbl) lbl.classList.add('active');
       }
 
-      logoFileName.innerText = 'Nenhum arquivo selecionado';
+      logoFileName.innerText = 'Nenhuma imagem';
       logoRemoveBtn.classList.add('hidden');
 
       if (v.logoPreset !== 'none') {
@@ -1095,7 +1068,6 @@ function restoreQRState(item) {
     document.getElementById('val-logo-margin').innerText = `${v.logoMargin}px`;
     document.getElementById('logo-hide-dots').checked = v.logoHideDots;
 
-    // Reset design preset button selections (custom)
     document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
     document.querySelector('.preset-btn[data-preset="custom"]').classList.add('active');
   }
@@ -1135,11 +1107,11 @@ function showToast(message) {
   toast.style.bottom = '2rem';
   toast.style.left = '50%';
   toast.style.transform = 'translateX(-50%) translateY(20px)';
-  toast.style.backgroundColor = 'var(--text-main)';
-  toast.style.color = 'var(--bg-card)';
+  toast.style.backgroundColor = '#ffffff';
+  toast.style.color = '#000000';
   toast.style.padding = '0.75rem 1.5rem';
   toast.style.borderRadius = 'var(--radius-md)';
-  toast.style.fontSize = '0.875rem';
+  toast.style.fontSize = '0.825rem';
   toast.style.fontWeight = '600';
   toast.style.boxShadow = 'var(--shadow-xl)';
   toast.style.zIndex = '9999';
@@ -1149,13 +1121,11 @@ function showToast(message) {
   toast.innerText = message;
   document.body.appendChild(toast);
   
-  // Animate slide up
   setTimeout(() => {
     toast.style.transform = 'translateX(-50%) translateY(0)';
     toast.style.opacity = '1';
   }, 10);
 
-  // Animate fade out and remove
   setTimeout(() => {
     toast.style.transform = 'translateX(-50%) translateY(-10px)';
     toast.style.opacity = '0';
@@ -1205,61 +1175,41 @@ function crc16(payload) {
 }
 
 function generatePixPayload(key, name, city, amount, txid) {
-  // Normalize and validate inputs
   name = removeAccents(name || "RECEBEDOR").toUpperCase().substring(0, 25);
   city = removeAccents(city || "SAO PAULO").toUpperCase().substring(0, 15);
   txid = removeAccents(txid || "***").toUpperCase().substring(0, 25);
   if (!txid) txid = "***";
 
   let cleanKey = key.trim();
-  // cell phone format correction: if numbers only and length 11, add +55 prefix automatically
   if (/^\d{11}$/.test(cleanKey)) {
     cleanKey = "+55" + cleanKey;
   }
 
   const parts = [];
-  
-  // 00: Payload Format Indicator (Fixed)
   parts.push(formatTLV("00", "01"));
   
-  // 26: Merchant Account Information
   const gui = formatTLV("00", "br.gov.bcb.pix");
   const keyField = formatTLV("01", cleanKey);
   const mInfo = gui + keyField;
   parts.push(formatTLV("26", mInfo));
   
-  // 52: Merchant Category Code (Fixed)
   parts.push(formatTLV("52", "0000"));
-  
-  // 53: Transaction Currency (BRL)
   parts.push(formatTLV("53", "986"));
   
-  // 54: Transaction Amount
   if (amount) {
     const val = parseFloat(amount).toFixed(2);
     parts.push(formatTLV("54", val));
   }
   
-  // 58: Country Code (Fixed)
   parts.push(formatTLV("58", "BR"));
-  
-  // 59: Merchant Name
   parts.push(formatTLV("59", name));
-  
-  // 60: Merchant City
   parts.push(formatTLV("60", city));
   
-  // 62: Additional Data Field Template
   const refLabel = formatTLV("05", txid);
   parts.push(formatTLV("62", refLabel));
   
-  // Join all parts
   const payloadBase = parts.join("");
-  
-  // 63: CRC16 template
   const payloadWithCRCPlaceholder = payloadBase + "6304";
-  
-  // Calculate CRC
   const crcVal = crc16(payloadWithCRCPlaceholder);
   
   return payloadWithCRCPlaceholder + crcVal;
@@ -1298,7 +1248,6 @@ function extractPixField(payload, tag, subTag) {
     
     if (currentTag === tag) {
       if (subTag) {
-        // Search inside subTLVs
         return extractPixField(value, subTag);
       }
       return value;
