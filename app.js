@@ -155,11 +155,16 @@ function getQRContentAndLabel() {
       const num = document.getElementById('in-whats-num').value.replace(/\D/g, '');
       const msg = document.getElementById('in-whats-msg').value.trim();
       if (num) {
-        content = `https://wa.me/${num}${msg ? '?text=' + encodeURIComponent(msg) : ''}`;
-        label = `WhatsApp: +${num}`;
+        let cleanNum = num;
+        // Auto-prefix country code 55 for Brazil if not specified but DDD is present
+        if (cleanNum.length === 10 || cleanNum.length === 11) {
+          cleanNum = '55' + cleanNum;
+        }
+        content = `https://wa.me/${cleanNum}${msg ? '?text=' + encodeURIComponent(msg) : ''}`;
+        label = `WhatsApp: +${cleanNum}`;
       } else {
-        content = 'https://wa.me/';
-        label = 'WhatsApp';
+        content = 'https://wa.me/5511999999999';
+        label = 'WhatsApp Exemplo';
       }
       break;
 
@@ -174,8 +179,8 @@ function getQRContentAndLabel() {
         content = `WIFI:T:${sec};S:${escSSID};P:${sec === 'nopass' ? '' : escPass};;`;
         label = `Wi-Fi: ${ssid}`;
       } else {
-        content = 'WIFI:S:;;';
-        label = 'Wi-Fi Aberta';
+        content = 'WIFI:T:WPA;S:RedeExemplo;P:senha123;;';
+        label = 'Wi-Fi Exemplo';
       }
       break;
 
@@ -190,8 +195,8 @@ function getQRContentAndLabel() {
         content = generatePixPayload(key, name, city, amount, desc);
         label = `PIX: ${name || 'Recebedor'}${amount ? ' - R$ ' + parseFloat(amount).toFixed(2) : ''}`;
       } else {
-        content = 'PIX';
-        label = 'PIX em branco';
+        content = generatePixPayload('12345678901', 'JOSE DA SILVA', 'SAO PAULO', '10.00', 'EXEMPLO');
+        label = 'PIX Exemplo';
       }
       break;
 
@@ -203,8 +208,8 @@ function getQRContentAndLabel() {
         content = `mailto:${to}?subject=${encodeURIComponent(sub)}&body=${encodeURIComponent(body)}`;
         label = `E-mail: ${to}`;
       } else {
-        content = 'mailto:';
-        label = 'E-mail';
+        content = 'mailto:contato@exemplo.com';
+        label = 'E-mail Exemplo';
       }
       break;
 
@@ -220,8 +225,8 @@ function getQRContentAndLabel() {
         content = generateVCard(first, last, phone, email, org, url);
         label = `Contato: ${first} ${last}`.trim();
       } else {
-        content = 'BEGIN:VCARD\nEND:VCARD';
-        label = 'Contato Vazio';
+        content = generateVCard('João', 'Silva', '+5511999999999', 'joao@silva.com', 'Empresa S/A', 'https://exemplo.com');
+        label = 'Contato Exemplo';
       }
       break;
 
@@ -306,7 +311,8 @@ function generateQR() {
   }
 
   // Logo Settings
-  const logoPreset = document.querySelector('input[name="logo-preset"]:checked').value;
+  const checkedLogoInput = document.querySelector('input[name="logo-preset"]:checked');
+  const logoPreset = checkedLogoInput ? checkedLogoInput.value : (customLogoDataUrl ? 'custom' : 'none');
   let logoUrl = null;
 
   if (logoPreset === 'custom') {
