@@ -1120,16 +1120,58 @@ textarea {
   padding: 2px;
 }
 
+/* Action buttons grid (PNG / SVG / Copiar / Compartilhar) */
+.actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.625rem;
+  width: 100%;
+}
+
+.actions-grid button {
+  width: 100%;
+}
+
 /* Raw Code Copy Wrapper */
 .raw-payload-wrapper {
+  width: 100%;
+  text-align: left;
   background-color: rgba(0, 0, 0, 0.3);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.payload-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 0.875rem;
+}
+
+#payload-type-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
 }
 
 .payload-body {
+  padding: 0.75rem 0.875rem;
   background-color: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255,255,255,0.03);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.payload-body code {
+  display: block;
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: var(--text-main);
+  word-break: break-all;
+  white-space: pre-wrap;
+  line-height: 1.5;
 }
 
 /* Custom Scrollbar for Dark Mode */
