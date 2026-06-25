@@ -593,22 +593,35 @@
             </div>
 
             <!-- Quick Download and Actions -->
+            <p class="actions-hint">Como você vai usar o QR Code?</p>
             <div class="actions-grid">
-              <button id="btn-download-png" class="btn-primary">
+              <button id="btn-download-png" class="btn-primary btn-action" title="Baixa uma imagem PNG. Ideal para tela: WhatsApp, redes sociais, e-mail e sites.">
                 <i data-lucide="download"></i>
-                <span>PNG</span>
+                <span class="btn-action-text">
+                  <span class="btn-action-title">Baixar imagem</span>
+                  <span class="btn-action-hint">Para tela e redes (PNG)</span>
+                </span>
               </button>
-              <button id="btn-download-svg" class="btn-secondary">
+              <button id="btn-download-svg" class="btn-secondary btn-action" title="Baixa um arquivo vetorial SVG. Não perde qualidade ao ampliar — ideal para impressão e gráficas.">
                 <i data-lucide="file-code"></i>
-                <span>SVG (Vetor)</span>
+                <span class="btn-action-text">
+                  <span class="btn-action-title">Baixar para impressão</span>
+                  <span class="btn-action-hint">Qualquer tamanho (SVG)</span>
+                </span>
               </button>
-              <button id="btn-copy-img" class="btn-secondary" title="Copiar Imagem">
+              <button id="btn-copy-img" class="btn-secondary btn-action" title="Copia a imagem do QR Code para colar em outro aplicativo.">
                 <i data-lucide="copy"></i>
-                <span>Copiar</span>
+                <span class="btn-action-text">
+                  <span class="btn-action-title">Copiar</span>
+                  <span class="btn-action-hint">Colar em outro app</span>
+                </span>
               </button>
-              <button id="btn-share" class="btn-secondary" title="Compartilhar">
+              <button id="btn-share" class="btn-secondary btn-action" title="Compartilha o QR Code direto pelo WhatsApp, e-mail e outros apps.">
                 <i data-lucide="share-2"></i>
-                <span>Compartilhar</span>
+                <span class="btn-action-text">
+                  <span class="btn-action-title">Compartilhar</span>
+                  <span class="btn-action-hint">WhatsApp, e-mail…</span>
+                </span>
               </button>
             </div>
           </div>

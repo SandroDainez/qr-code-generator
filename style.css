@@ -1121,6 +1121,14 @@ textarea {
 }
 
 /* Action buttons grid (PNG / SVG / Copiar / Compartilhar) */
+.actions-hint {
+  width: 100%;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
 .actions-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1130,6 +1138,46 @@ textarea {
 
 .actions-grid button {
   width: 100%;
+}
+
+/* Action button with a title + plain-language hint */
+.btn-action {
+  justify-content: flex-start;
+  text-align: left;
+  padding: 0.75rem 1rem;
+}
+
+.btn-action > i {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+
+.btn-action-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+  overflow: hidden;
+}
+
+.btn-action-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.btn-action-hint {
+  font-size: 0.7rem;
+  font-weight: 500;
+  opacity: 0.7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 480px) {
+  .actions-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Raw Code Copy Wrapper */
