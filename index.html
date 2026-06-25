@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QRCraft | Gerador de QR Code Premium & Personalizado</title>
+  <!-- Google Fonts: Outfit & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  
+  <!-- qr-code-styling Library -->
+  <script src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="logo-icon">
+          <i data-lucide="qr-code"></i>
+        </div>
+        <div>
+          <h1>QRCraft</h1>
+          <p>Crie códigos QR premium com design exclusivo</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="theme-toggle" class="btn-icon" title="Alternar Tema">
+          <i data-lucide="sun" class="sun-icon"></i>
+          <i data-lucide="moon" class="moon-icon"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="workspace">
+      <!-- Left Column: Inputs & Style Controls -->
+      <section class="controls-column">
+        <!-- Section: Content Type Selector -->
+        <div class="card card-tabs">
+          <h2>1. Conteúdo</h2>
+          <div class="tabs-grid">
+            <button class="tab-btn active" data-tab="link">
+              <i data-lucide="link"></i>
+              <span>Link/URL</span>
+            </button>
+            <button class="tab-btn" data-tab="whats">
+              <i data-lucide="phone"></i>
+              <span>WhatsApp</span>
+            </button>
+            <button class="tab-btn" data-tab="wifi">
+              <i data-lucide="wifi"></i>
+              <span>Wi-Fi</span>
+            </button>
+            <button class="tab-btn" data-tab="pix">
+              <i data-lucide="banknote"></i>
+              <span>PIX</span>
+            </button>
+            <button class="tab-btn" data-tab="email">
+              <i data-lucide="mail"></i>
+              <span>E-mail</span>
+            </button>
+            <button class="tab-btn" data-tab="vcard">
+              <i data-lucide="contact-2"></i>
+              <span>Contato</span>
+            </button>
+            <button class="tab-btn" data-tab="text">
+              <i data-lucide="align-left"></i>
+              <span>Texto</span>
+            </button>
+          </div>
+
+          <div class="tab-contents">
+            <!-- TAB: Link -->
+            <div class="tab-content active" id="content-link">
+              <div class="input-group">
+                <label for="in-link">Endereço Web (URL)</label>
+                <div class="input-wrapper">
+                  <i data-lucide="globe" class="input-icon"></i>
+                  <input type="url" id="in-link" placeholder="https://exemplo.com.br" value="https://exemplo.com.br">
+                </div>
+                <p class="input-hint">Insira o link completo com http:// ou https://</p>
+              </div>
+            </div>
+
+            <!-- TAB: WhatsApp -->
+            <div class="tab-content" id="content-whats">
+              <div class="form-row">
+                <div class="input-group">
+                  <label for="in-whats-num">Número do WhatsApp</label>
+                  <div class="input-wrapper">
+                    <i data-lucide="smartphone" class="input-icon"></i>
+                    <input type="tel" id="in-whats-num" placeholder="5511999999999">
+                  </div>
+                  <p class="input-hint">Ex: Código do País + DDD + Número. Ex: 5511999999999</p>
+                </div>
+              </div>
+              <div class="input-group">
+                <label for="in-whats-msg">Mensagem Inicial (Opcional)</label>
+                <textarea id="in-whats-msg" placeholder="Olá! Gostaria de mais informações..." rows="3"></textarea>
+              </div>
+            </div>
+
+            <!-- TAB: Wi-Fi -->
+            <div class="tab-content" id="content-wifi">
+              <div class="form-row">
+                <div class="input-group">
+                  <label for="in-wifi-ssid">Nome da Rede (SSID)</label>
+                  <div class="input-wrapper">
+                    <i data-lucide="wifi" class="input-icon"></i>
+                    <input type="text" id="in-wifi-ssid" placeholder="Minha Rede Wi-Fi">
+                  </div>
+                </div>
+                <div class="input-group">
+                  <label for="in-wifi-pass">Senha da Rede</label>
+                  <div class="input-wrapper">
+                    <i data-lucide="key-round" class="input-icon"></i>
+                    <input type="password" id="in-wifi-pass" placeholder="Senha123">
+                  </div>
+                </div>
+              </div>
+              <div class="input-group">
+                <label for="in-wifi-sec">Tipo de Criptografia</label>
+                <select id="in-wifi-sec">
+                  <option value="WPA" selected>WPA/WPA2 (Recomendado)</option>
+                  <option value="WEP">WEP</option>
+                  <option value="nopass">Sem senha (Rede aberta)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- TAB: PIX -->
+            <div class="tab-content" id="content-pix">
+              <div class="form-row">
+                <div class="input-group">
+                  <label for="in-pix-key">Chave PIX</label>
+                  <div class="input-wrapper">
+                    <i data-lucide="key-round" class="input-icon"></i>
+                    <input type="text" id="in-pix-key" placeholder="CNPJ, CPF, E-mail, Celular ou Aleatória">
+                  </div>
+                  <p class="input-hint">Celular com +55 e DDD (Ex: 5511999998888)</p>
+                </div>
+                <div class="input-group">
+                  <label for="in-pix-name">Nome do Recebedor</label>
+                  <div class="input-wrapper">
+                    <i data-lucide="user" class="input-icon"></i>
+                    <input type="text" id="in-pix-name" placeholder="Ex: Jose da Silva" maxlength="25">
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="input-group">
+                  <label for="in-pix-city">Cidade do Recebedor</label>
+                  <div class="input-wrapper">
+                    <i data-lucide="map-pin" class="input-icon"></i>
+                    <input type="text" id="in-pix-city" placeholder="Ex: Sao Paulo" maxlength="15">
+                  </div>
+                </div>
+                <div class="input-group">
+                  <label for="in-pix-amount">Valor (R$ - Opcional)</label>
+                  <div class="input-wrapper">
+                    <span class="currency-prefix">R$</span>
+                    <input type="number" id="in-pix-amount" placeholder="0,00" step="0.01" min="0">
+                  </div>
+                </div>
+              </div>
+              <div class="input-group">
+                <label for="in-pix-desc">ID da Transação / Descrição (Opcional)</label>
+                <div class="input-wrapper">
+                  <i data-lucide="tag" class="input-icon"></i>
+                  <input type="text" id="in-pix-desc" placeholder="Ex: PEDIDO123" maxlength="25">
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB: Email -->
+            <div class="tab-content" id="content-email">
+              <div class="input-group">
+                <label for="in-email-to">Destinatário</label>
+                <div class="input-wrapper">
+                  <i data-lucide="mail" class="input-icon"></i>
+                  <input type="email" id="in-email-to" placeholder="contato@exemplo.com">
+                </div>
+              </div>
+              <div class="input-group">
+                <label for="in-email-sub">Assunto (Opcional)</label>
+                <div class="input-wrapper">
+                  <i data-lucide="heading" class="input-icon"></i>
+                  <input type="text" id="in-email-sub" placeholder="Contato Comercial">
+                </div>
+              </div>
+              <div class="input-group">
+                <label for="in-email-body">Mensagem (Opcional)</label>
+                <textarea id="in-email-body" placeholder="Escreva a mensagem aqui..." rows="3"></textarea>
+              </div>
+            </div>
+
+            <!-- TAB: Contact (vCard) -->
+            <div class="tab-content" id="content-vcard">
+              <div class="form-row">
+                <div class="input-group">
+                  <label for="in-vc-first">Nome</label>
+                  <div class="input-wrapper">
+                    <i data-lucide="user" class="input-icon"></i>
+                    <input type="text" id="in-vc-first" placeholder="Ex: João">
+                  </div>
+                </div>
+                <div class="input-group">
+                  <label for="in-vc-last">Sobrenome</label>
+                  <div class="input-wrapper">
+                    <input type="text" id="in-vc-last" placeholder="Ex: Silva">
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="input-group">
+                  <label for="in-vc-phone">Telefone</label>
+                  <div class="input-wrapper">
+                    <i data-lucide="phone" class="input-icon"></i>
+                    <input type="tel" id="in-vc-phone" placeholder="+55 11 99999-9999">
+                  </div>
+                </div>
+                <div class="input-group">
+                  <label for="in-vc-email">E-mail</label>
+                  <div class="input-wrapper">
+                    <i data-lucide="mail" class="input-icon"></i>
+                    <input type="email" id="in-vc-email" placeholder="joao@silva.com">
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="input-group">
+                  <label for="in-vc-org">Empresa</label>
+                  <div class="input-wrapper">
+                    <i data-lucide="building" class="input-icon"></i>
+                    <input type="text" id="in-vc-org" placeholder="Empresa S/A">
+                  </div>
+                </div>
+                <div class="input-group">
+                  <label for="in-vc-url">Site (URL)</label>
+                  <div class="input-wrapper">
+                    <i data-lucide="globe" class="input-icon"></i>
+                    <input type="url" id="in-vc-url" placeholder="https://exemplo.com">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB: Text -->
+            <div class="tab-content" id="content-text">
+              <div class="input-group">
+                <label for="in-text">Texto Livre</label>
+                <textarea id="in-text" placeholder="Digite sua anotação ou texto livre aqui..." rows="4"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section: Design Presets -->
+        <div class="card card-presets">
+          <h2>2. Presets Rápidos</h2>
+          <div class="presets-grid">
+            <button class="preset-btn active" data-preset="classic">
+              <span class="preset-preview p-classic"></span>
+              <span class="preset-label">Clássico</span>
+            </button>
+            <button class="preset-btn" data-preset="rounded-ocean">
+              <span class="preset-preview p-ocean"></span>
+              <span class="preset-label">Oceano</span>
+            </button>
+            <button class="preset-btn" data-preset="neon-purple">
+              <span class="preset-preview p-neon"></span>
+              <span class="preset-label">Neon Glow</span>
+            </button>
+            <button class="preset-btn" data-preset="gold-dark">
+              <span class="preset-preview p-gold"></span>
+              <span class="preset-label">Gold Dark</span>
+            </button>
+            <button class="preset-btn" data-preset="emerald-mint">
+              <span class="preset-preview p-emerald"></span>
+              <span class="preset-label">Hortelã</span>
+            </button>
+            <button class="preset-btn" data-preset="custom">
+              <span class="preset-preview p-custom"><i data-lucide="sliders"></i></span>
+              <span class="preset-label">Personalizado</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Section: Visual Customization -->
+        <div class="card card-customization">
+          <div class="custom-accordion-header">
+            <h2>3. Customização Avançada</h2>
+            <i data-lucide="chevron-down" class="accordion-icon"></i>
+          </div>
+
+          <div class="custom-accordion-body">
+            <!-- Colors Group -->
+            <fieldset class="custom-group">
+              <legend><i data-lucide="palette"></i> Cores do QR Code</legend>
+              
+              <div class="input-group">
+                <label>Modo de Cor do QR</label>
+                <div class="radio-toggle">
+                  <label class="radio-label">
+                    <input type="radio" name="color-mode" value="solid" checked>
+                    <span>Sólido</span>
+                  </label>
+                  <label class="radio-label">
+                    <input type="radio" name="color-mode" value="gradient">
+                    <span>Gradiente</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Solid Color Controls -->
+              <div id="solid-color-controls" class="color-options-row">
+                <div class="color-picker-group">
+                  <label for="color-solid">Cor Principal</label>
+                  <div class="color-picker-wrapper">
+                    <input type="color" id="color-solid" value="#111111">
+                    <input type="text" id="color-solid-hex" class="hex-text" value="#111111" maxlength="7">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Gradient Controls -->
+              <div id="gradient-color-controls" class="color-options-row hidden">
+                <div class="color-picker-group">
+                  <label for="color-grad-1">Cor Inicial</label>
+                  <div class="color-picker-wrapper">
+                    <input type="color" id="color-grad-1" value="#3b82f6">
+                    <input type="text" id="color-grad-1-hex" class="hex-text" value="#3b82f6" maxlength="7">
+                  </div>
+                </div>
+                <div class="color-picker-group">
+                  <label for="color-grad-2">Cor Final</label>
+                  <div class="color-picker-wrapper">
+                    <input type="color" id="color-grad-2" value="#8b5cf6">
+                    <input type="text" id="color-grad-2-hex" class="hex-text" value="#8b5cf6" maxlength="7">
+                  </div>
+                </div>
+                <div class="input-group">
+                  <label for="color-grad-type">Tipo de Gradiente</label>
+                  <select id="color-grad-type">
+                    <option value="linear" selected>Linear</option>
+                    <option value="radial">Radial</option>
+                  </select>
+                </div>
+                <div class="input-group" id="gradient-angle-group">
+                  <label for="color-grad-angle">Rotação (0-360°)</label>
+                  <div class="range-slider-wrapper">
+                    <input type="range" id="color-grad-angle" min="0" max="360" value="45">
+                    <span class="range-value" id="val-grad-angle">45°</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Background Controls -->
+              <div class="color-options-row border-top">
+                <div class="color-picker-group">
+                  <label for="color-bg">Cor de Fundo</label>
+                  <div class="color-picker-wrapper">
+                    <input type="color" id="color-bg" value="#ffffff">
+                    <input type="text" id="color-bg-hex" class="hex-text" value="#ffffff" maxlength="7">
+                  </div>
+                </div>
+                <div class="checkbox-group">
+                  <label class="checkbox-label" for="color-bg-trans">
+                    <input type="checkbox" id="color-bg-trans">
+                    <span class="checkbox-box"></span>
+                    <span>Fundo Transparente</span>
+                  </label>
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- Eye Customization Group -->
+            <fieldset class="custom-group">
+              <legend><i data-lucide="eye"></i> Estilo dos Cantos (Olhos)</legend>
+              <div class="checkbox-group margin-bottom-sm">
+                <label class="checkbox-label" for="custom-eyes-toggle">
+                  <input type="checkbox" id="custom-eyes-toggle">
+                  <span class="checkbox-box"></span>
+                  <span>Personalizar cores dos cantos</span>
+                </label>
+              </div>
+
+              <div id="custom-eyes-controls" class="hidden">
+                <div class="color-options-row">
+                  <div class="color-picker-group">
+                    <label for="color-eye-outer">Borda dos Olhos</label>
+                    <div class="color-picker-wrapper">
+                      <input type="color" id="color-eye-outer" value="#111111">
+                      <input type="text" id="color-eye-outer-hex" class="hex-text" value="#111111" maxlength="7">
+                    </div>
+                  </div>
+                  <div class="color-picker-group">
+                    <label for="color-eye-inner">Centro dos Olhos</label>
+                    <div class="color-picker-wrapper">
+                      <input type="color" id="color-eye-inner" value="#111111">
+                      <input type="text" id="color-eye-inner-hex" class="hex-text" value="#111111" maxlength="7">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="input-group">
+                  <label for="style-eye-outer">Formato da Borda</label>
+                  <select id="style-eye-outer">
+                    <option value="square" selected>Quadrado</option>
+                    <option value="rounded">Arredondado</option>
+                    <option value="extra-rounded">Extra Arredondado</option>
+                    <option value="dot">Círculo</option>
+                  </select>
+                </div>
+                <div class="input-group">
+                  <label for="style-eye-inner">Formato do Centro</label>
+                  <select id="style-eye-inner">
+                    <option value="square" selected>Quadrado</option>
+                    <option value="dot">Círculo</option>
+                  </select>
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- Dots Customization Group -->
+            <fieldset class="custom-group">
+              <legend><i data-lucide="grid-3x3"></i> Estilo dos Módulos (Corpo)</legend>
+              <div class="input-group">
+                <label for="style-dots">Formato dos Módulos</label>
+                <select id="style-dots">
+                  <option value="square" selected>Quadrado</option>
+                  <option value="rounded">Arredondado</option>
+                  <option value="extra-rounded">Extra Arredondado</option>
+                  <option value="dots">Círculos</option>
+                  <option value="classy">Elegante (Linhas verticais)</option>
+                  <option value="classy-rounded">Elegante Arredondado</option>
+                </select>
+              </div>
+            </fieldset>
+
+            <!-- Logo Group -->
+            <fieldset class="custom-group">
+              <legend><i data-lucide="image"></i> Logotipo no Centro</legend>
+              
+              <div class="logo-presets">
+                <label class="logo-preset-btn active" data-logo="none" title="Sem Logo">
+                  <input type="radio" name="logo-preset" value="none" checked>
+                  <span class="logo-preset-inner"><i data-lucide="ban"></i></span>
+                </label>
+                <label class="logo-preset-btn" data-logo="link" title="Web Link">
+                  <input type="radio" name="logo-preset" value="link">
+                  <span class="logo-preset-inner"><i data-lucide="globe"></i></span>
+                </label>
+                <label class="logo-preset-btn" data-logo="whats" title="WhatsApp">
+                  <input type="radio" name="logo-preset" value="whats">
+                  <span class="logo-preset-inner logo-green"><i data-lucide="phone"></i></span>
+                </label>
+                <label class="logo-preset-btn" data-logo="wifi" title="Wi-Fi">
+                  <input type="radio" name="logo-preset" value="wifi">
+                  <span class="logo-preset-inner logo-blue"><i data-lucide="wifi"></i></span>
+                </label>
+                <label class="logo-preset-btn" data-logo="pix" title="PIX">
+                  <input type="radio" name="logo-preset" value="pix">
+                  <span class="logo-preset-inner logo-cyan"><i data-lucide="banknote"></i></span>
+                </label>
+                <label class="logo-preset-btn" data-logo="email" title="E-mail">
+                  <input type="radio" name="logo-preset" value="email">
+                  <span class="logo-preset-inner logo-red"><i data-lucide="mail"></i></span>
+                </label>
+              </div>
+
+              <div class="logo-upload-wrapper">
+                <label for="logo-upload" class="btn-secondary logo-upload-label">
+                  <i data-lucide="upload-cloud"></i>
+                  <span>Enviar Logo Personalizada</span>
+                </label>
+                <input type="file" id="logo-upload" accept="image/*" class="hidden-input">
+                <span id="logo-file-name" class="upload-file-name">Nenhum arquivo selecionado</span>
+                <button type="button" id="logo-remove-btn" class="btn-icon btn-remove hidden" title="Remover Logo">
+                  <i data-lucide="trash-2"></i>
+                </button>
+              </div>
+
+              <!-- Logo settings (hidden if logo is none) -->
+              <div id="logo-settings-controls" class="hidden border-top padding-top-sm">
+                <div class="form-row">
+                  <div class="input-group">
+                    <label for="logo-size">Tamanho da Logo</label>
+                    <div class="range-slider-wrapper">
+                      <input type="range" id="logo-size" min="0.05" max="0.4" step="0.01" value="0.15">
+                      <span class="range-value" id="val-logo-size">15%</span>
+                    </div>
+                  </div>
+                  <div class="input-group">
+                    <label for="logo-margin">Margem da Logo</label>
+                    <div class="range-slider-wrapper">
+                      <input type="range" id="logo-margin" min="0" max="24" step="1" value="6">
+                      <span class="range-value" id="val-logo-margin">6px</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="checkbox-group">
+                  <label class="checkbox-label" for="logo-hide-dots">
+                    <input type="checkbox" id="logo-hide-dots" checked>
+                    <span class="checkbox-box"></span>
+                    <span>Remover pontos atrás do logo</span>
+                  </label>
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- Export settings -->
+            <fieldset class="custom-group">
+              <legend><i data-lucide="settings"></i> Opções Técnicas</legend>
+              <div class="form-row">
+                <div class="input-group">
+                  <label for="qr-size">Tamanho de Saída</label>
+                  <select id="qr-size">
+                    <option value="256">256 x 256 px</option>
+                    <option value="512" selected>512 x 512 px</option>
+                    <option value="1024">1024 x 1024 px</option>
+                    <option value="2048">2048 x 2048 px</option>
+                  </select>
+                </div>
+                <div class="input-group">
+                  <label for="qr-error-level">Nível de Correção</label>
+                  <select id="qr-error-level">
+                    <option value="L">Baixo (L ~7%)</option>
+                    <option value="M">Médio (M ~15%)</option>
+                    <option value="Q">Quartil (Q ~25%)</option>
+                    <option value="H" selected>Alto (H ~30% - Ideal para logos)</option>
+                  </select>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: Interactive Preview & Downloads -->
+      <section class="preview-column">
+        <div class="sticky-preview-wrapper">
+          <div class="card card-preview">
+            <div class="preview-header">
+              <h2>QR Code</h2>
+              <span class="status-badge live-badge"><span class="pulse-dot"></span> Tempo Real</span>
+            </div>
+
+            <!-- Canvas Container -->
+            <div class="qr-canvas-container">
+              <div id="qr-output">
+                <!-- QR Code styling library will inject the canvas here -->
+              </div>
+              <div id="qr-placeholder" class="qr-placeholder hidden">
+                <i data-lucide="qr-code"></i>
+                <p>Preencha os dados à esquerda para visualizar</p>
+              </div>
+            </div>
+
+            <!-- Copy raw code area (PIX Copia e Cola / Link raw value) -->
+            <div id="raw-payload-container" class="raw-payload-wrapper hidden">
+              <div class="payload-header">
+                <span id="payload-type-label">PIX Copia e Cola</span>
+                <button type="button" id="btn-copy-text" class="btn-text-action">
+                  <i data-lucide="copy"></i>
+                  <span>Copiar Código</span>
+                </button>
+              </div>
+              <div class="payload-body">
+                <code id="raw-payload-text">00020126400014br.gov.bcb.pix0114...</code>
+              </div>
+            </div>
+
+            <!-- Quick Download and Actions -->
+            <div class="actions-grid">
+              <button id="btn-download-png" class="btn-primary">
+                <i data-lucide="download"></i>
+                <span>Download PNG</span>
+              </button>
+              <button id="btn-download-svg" class="btn-secondary">
+                <i data-lucide="file-code"></i>
+                <span>SVG (Vetor)</span>
+              </button>
+              <button id="btn-copy-img" class="btn-secondary" title="Copiar como imagem para colar direto em outros apps">
+                <i data-lucide="copy-check"></i>
+                <span>Copiar Imagem</span>
+              </button>
+              <button id="btn-share" class="btn-secondary" title="Compartilhar QR Code">
+                <i data-lucide="share-2"></i>
+                <span>Compartilhar</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Section: Saved QRs / History -->
+          <div class="card card-history">
+            <div class="history-header">
+              <h2>Histórico</h2>
+              <button id="btn-clear-history" class="btn-text-action danger">
+                <i data-lucide="trash-2"></i>
+                <span>Limpar</span>
+              </button>
+            </div>
+            <div id="history-list" class="history-list">
+              <!-- Dynamically populated -->
+              <div class="history-empty">
+                <i data-lucide="history"></i>
+                <p>Nenhum QR Code salvo ainda. Os códigos gerados aparecerão aqui.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
