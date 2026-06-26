@@ -1091,18 +1091,26 @@ function restoreQRState(item) {
   triggerUpdate();
 }
 
-// Download QR as SVG, fixing a qr-code-styling bug where the background rect
-// references an undefined clipPath (#clip-path-background-color). Strict SVG
-// viewers (Preview, Illustrator, print software) then drop the background,
-// leaving light modules invisible on white. We strip the broken reference.
+// Download QR as SVG, fixing two qr-code-styling bugs that break strict SVG
+// viewers (macOS Preview/Quick Look, Illustrator, print software):
+//   1. The background rect references an undefined clipPath
+//      (#clip-path-background-color) -> the background gets dropped.
+//   2. Every clip-path uses quoted refs like url('#id'). Strict parsers reject
+//      the inner quotes, so ALL the QR module/corner rects fail to render and
+//      only the background square remains -> "the QR doesn't show up".
+// Chrome is lenient and renders both anyway, which is why it looks fine in-app.
 async function downloadFixedSVG(filename) {
   const blob = await qrCodeInstance.getRawData('svg');
   let svgText = await blob.text();
 
+  // 1. Remove the broken background clip reference.
   svgText = svgText.replace(
     /\s*clip-path="url\((['"]?)#clip-path-background-color\1\)"/g,
     ''
   );
+
+  // 2. Strip quotes inside every url(...) reference: url('#id') -> url(#id).
+  svgText = svgText.replace(/url\((['"])(#[^'"]+)\1\)/g, 'url($2)');
 
   const fixedBlob = new Blob([svgText], { type: 'image/svg+xml;charset=utf-8' });
   const url = URL.createObjectURL(fixedBlob);
