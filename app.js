@@ -688,17 +688,19 @@ function setupExportEvents() {
     saveToHistory();
   });
 
-  // Download SVG (with fix for the library's broken background clip-path)
+  // Download for printing: high-resolution, print-safe PNG (black on white).
+  // PNG always opens as an image (unlike SVG, which many apps open as code),
+  // prints sharp and scans reliably.
   document.getElementById('btn-download-svg').addEventListener('click', async () => {
     const { label } = getQRContentAndLabel();
-    const filename = sanitizeFilename(label || 'qrcode');
+    const filename = sanitizeFilename(label || 'qrcode') + '_impressao';
     try {
-      await downloadFixedSVG(filename);
+      await downloadPrintPNG(filename);
       saveToHistory();
     } catch (e) {
       console.error(e);
-      // Fallback to the library's own download if anything goes wrong
-      qrCodeInstance.download({ name: filename, extension: 'svg' });
+      // Fallback to the regular PNG download if anything goes wrong
+      qrCodeInstance.download({ name: filename, extension: 'png' });
     }
   });
 
@@ -1091,24 +1093,21 @@ function restoreQRState(item) {
   triggerUpdate();
 }
 
-// Download QR as a PRINT-SAFE SVG: always dark modules on a white background,
-// regardless of the on-screen theme. A printed QR must be dark-on-light to be
-// visible on paper and to scan reliably in any reader.
-//
-// We also fix two qr-code-styling bugs that break strict SVG viewers
-// (macOS Preview/Quick Look, Illustrator, print software):
-//   1. The background rect references an undefined clipPath
-//      (#clip-path-background-color) -> the background gets dropped.
-//   2. Every clip-path uses quoted refs like url('#id'). Strict parsers reject
-//      the inner quotes, so the QR rects fail and only the background remains.
-// Chrome is lenient and renders both anyway, which is why it looked fine in-app.
-async function downloadFixedSVG(filename) {
+// Download a PRINT-SAFE PNG: high resolution, always dark modules on a white
+// background, regardless of the on-screen theme. A printed QR must be
+// dark-on-light to be visible on paper and to scan reliably. PNG is used (not
+// SVG) because a PNG always opens as an image — SVG files get opened as code
+// by many apps, which confuses non-technical users.
+async function downloadPrintPNG(filename) {
   const PRINT_DARK = '#000000';
   const PRINT_LIGHT = '#ffffff';
+  const PRINT_SIZE = 2048; // sharp enough for posters, stickers, flyers
 
   // Clone the current QR options and force print-safe colors (no gradients).
   const opts = JSON.parse(JSON.stringify(qrCodeInstance._options));
-  opts.type = 'svg';
+  opts.type = 'canvas';
+  opts.width = PRINT_SIZE;
+  opts.height = PRINT_SIZE;
 
   opts.dotsOptions = { type: (opts.dotsOptions && opts.dotsOptions.type) || 'square', color: PRINT_DARK };
   opts.cornersSquareOptions = { type: (opts.cornersSquareOptions && opts.cornersSquareOptions.type) || 'square', color: PRINT_DARK };
@@ -1116,27 +1115,7 @@ async function downloadFixedSVG(filename) {
   opts.backgroundOptions = { ...(opts.backgroundOptions || {}), color: PRINT_LIGHT };
 
   const printQR = new QRCodeStyling(opts);
-  const blob = await printQR.getRawData('svg');
-  let svgText = await blob.text();
-
-  // 1. Remove the broken background clip reference.
-  svgText = svgText.replace(
-    /\s*clip-path="url\((['"]?)#clip-path-background-color\1\)"/g,
-    ''
-  );
-
-  // 2. Strip quotes inside every url(...) reference: url('#id') -> url(#id).
-  svgText = svgText.replace(/url\((['"])(#[^'"]+)\1\)/g, 'url($2)');
-
-  const fixedBlob = new Blob([svgText], { type: 'image/svg+xml;charset=utf-8' });
-  const url = URL.createObjectURL(fixedBlob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `${filename}.svg`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  await printQR.download({ name: filename, extension: 'png' });
 }
 
 // Utility: Clean names for file downloads
