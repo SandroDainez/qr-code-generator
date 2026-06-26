@@ -688,12 +688,18 @@ function setupExportEvents() {
     saveToHistory();
   });
 
-  // Download SVG
-  document.getElementById('btn-download-svg').addEventListener('click', () => {
+  // Download SVG (with fix for the library's broken background clip-path)
+  document.getElementById('btn-download-svg').addEventListener('click', async () => {
     const { label } = getQRContentAndLabel();
     const filename = sanitizeFilename(label || 'qrcode');
-    qrCodeInstance.download({ name: filename, extension: 'svg' });
-    saveToHistory();
+    try {
+      await downloadFixedSVG(filename);
+      saveToHistory();
+    } catch (e) {
+      console.error(e);
+      // Fallback to the library's own download if anything goes wrong
+      qrCodeInstance.download({ name: filename, extension: 'svg' });
+    }
   });
 
   // Copy Image to Clipboard
@@ -1083,6 +1089,30 @@ function restoreQRState(item) {
 
   showToast('QR Code e configurações restaurados!');
   triggerUpdate();
+}
+
+// Download QR as SVG, fixing a qr-code-styling bug where the background rect
+// references an undefined clipPath (#clip-path-background-color). Strict SVG
+// viewers (Preview, Illustrator, print software) then drop the background,
+// leaving light modules invisible on white. We strip the broken reference.
+async function downloadFixedSVG(filename) {
+  const blob = await qrCodeInstance.getRawData('svg');
+  let svgText = await blob.text();
+
+  svgText = svgText.replace(
+    /\s*clip-path="url\((['"]?)#clip-path-background-color\1\)"/g,
+    ''
+  );
+
+  const fixedBlob = new Blob([svgText], { type: 'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(fixedBlob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${filename}.svg`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 // Utility: Clean names for file downloads
