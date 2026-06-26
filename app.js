@@ -1091,16 +1091,32 @@ function restoreQRState(item) {
   triggerUpdate();
 }
 
-// Download QR as SVG, fixing two qr-code-styling bugs that break strict SVG
-// viewers (macOS Preview/Quick Look, Illustrator, print software):
+// Download QR as a PRINT-SAFE SVG: always dark modules on a white background,
+// regardless of the on-screen theme. A printed QR must be dark-on-light to be
+// visible on paper and to scan reliably in any reader.
+//
+// We also fix two qr-code-styling bugs that break strict SVG viewers
+// (macOS Preview/Quick Look, Illustrator, print software):
 //   1. The background rect references an undefined clipPath
 //      (#clip-path-background-color) -> the background gets dropped.
 //   2. Every clip-path uses quoted refs like url('#id'). Strict parsers reject
-//      the inner quotes, so ALL the QR module/corner rects fail to render and
-//      only the background square remains -> "the QR doesn't show up".
-// Chrome is lenient and renders both anyway, which is why it looks fine in-app.
+//      the inner quotes, so the QR rects fail and only the background remains.
+// Chrome is lenient and renders both anyway, which is why it looked fine in-app.
 async function downloadFixedSVG(filename) {
-  const blob = await qrCodeInstance.getRawData('svg');
+  const PRINT_DARK = '#000000';
+  const PRINT_LIGHT = '#ffffff';
+
+  // Clone the current QR options and force print-safe colors (no gradients).
+  const opts = JSON.parse(JSON.stringify(qrCodeInstance._options));
+  opts.type = 'svg';
+
+  opts.dotsOptions = { type: (opts.dotsOptions && opts.dotsOptions.type) || 'square', color: PRINT_DARK };
+  opts.cornersSquareOptions = { type: (opts.cornersSquareOptions && opts.cornersSquareOptions.type) || 'square', color: PRINT_DARK };
+  opts.cornersDotOptions = { type: (opts.cornersDotOptions && opts.cornersDotOptions.type) || 'square', color: PRINT_DARK };
+  opts.backgroundOptions = { ...(opts.backgroundOptions || {}), color: PRINT_LIGHT };
+
+  const printQR = new QRCodeStyling(opts);
+  const blob = await printQR.getRawData('svg');
   let svgText = await blob.text();
 
   // 1. Remove the broken background clip reference.
